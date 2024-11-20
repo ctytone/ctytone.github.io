@@ -25,14 +25,14 @@ border-radius: 25%;
     margin: auto;
     }
 
-    .about img {
+.about img {
         width: 150px;
         height: 200px;
         border-radius: 25%;
         border: 2px solid rgb(126, 14, 201);
         }
 
-        .about{
+.about{
             display:flex;
             flex-wrap:wrap;
             margin-right: 100px;
@@ -40,7 +40,7 @@ border-radius: 25%;
             justify-content: center;
             }
 
-            .about p {
+.about p {
                 width:50%;
                 text-align: center;
                 margin: auto;
