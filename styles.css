@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
@@ -30,6 +30,14 @@ nav ul li {
 nav ul li a {
     color: #fff;
     text-decoration: none;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+    transform: scale(1.1);
+    border-color: #fff;
 }
 
 main {
@@ -42,6 +50,14 @@ section {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease-in-out;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+section:hover {
+    transform: scale(1.05);
 }
 
 h2 {
@@ -57,6 +73,8 @@ h2 {
 .about img {
     max-width: 30%;
     height: auto;
+    border: 2px solid black;
+    border-radius: 10px;
 }
 
 .contact-info p {
@@ -72,4 +90,15 @@ footer {
     padding: 10px;
     background-color: #333;
     color: #fff;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Media query for larger screens */
+@media (min-width: 1200px) {
+    .about img {
+        max-width: 20%;
+    }
 }
