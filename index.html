@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -32,11 +33,7 @@
 
         <section id="projects">
             <h2>My Projects</h2>
-            <ul>
-                <li><strong>Project 1</strong>: </li>
-                <li><strong>Project 2</strong>: </li>
-                <li><strong>Project 3</strong>: A personal portfolio (this one!)</li>
-            </ul>
+            <p>Check out my projects on <a href="https://github.com/ctytone?tab=repositories" target="_blank">GitHub</a>.</p>
         </section>
 
         <section id="skills">
@@ -65,5 +62,16 @@
     <footer>
         <p>© 2025 Christopher Tytone. All rights reserved.</p>
     </footer>
+
+    <script>
+        document.querySelectorAll('nav ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
