@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Christopher Tytone — Software Engineer (Automation & Systems)</title>
+  <meta name="description" content="Christopher Tytone — Software Engineer focused on automation and systems. Seeking internship opportunities in software and systems engineering." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- INTRO / TOP SECTION -->
+  <header id="intro" class="intro" role="banner" aria-label="Intro">
+    <div class="container">
+      <div class="intro-left">
+        <h1 class="name">Christopher Tytone</h1>
+        <p class="role">Software Engineer <span class="mod">— Automation &amp; Systems</span></p>
+        <p class="summary">
+          I build reliable, automated systems that solve real problems and improve efficiency.
+          I turn well-defined challenges into clean, working solutions.
+        </p>
+
+        <nav class="links" aria-label="Primary links">
+          <a class="btn" href="https://github.com/ctytone" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="btn" href="files/Tytone_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+          <a class="btn" href="https://www.linkedin.com/in/christopher-tytone/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+
+      <div class="intro-right" aria-hidden="true">
+        <!-- If image missing, the fallback initials circle will show -->
+        <div class="avatar">
+          <img src="images/Portrait.jpeg" alt="Christopher Tytone" onerror="this.style.display='none'">
+          <div class="avatar-fallback" aria-hidden="true">CT</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="section container" aria-labelledby="about-heading">
+    <h2 id="about-heading" class="section-title">About</h2>
+    <div class="about-text">
+      <p>I’m a college student studying technology-focused fields, with a strong interest in software engineering, systems, and automation. I enjoy working close to the system level, where I can understand how things work end-to-end and improve them thoughtfully.</p>
+
+      <p>I work best in structured environments with clear goals. I enjoy breaking problems down step by step, designing solutions before building them, and troubleshooting issues until they’re fully resolved. My primary focus is automation and workflow optimization—building tools that save time, reduce errors, and run reliably.</p>
+
+      <p>I’m seeking internship opportunities where I can contribute as a software or systems engineer, continue building real-world experience, and work on tools or systems that have meaningful impact.</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS (Placeholder) -->
+  <section id="projects" class="section container" aria-labelledby="projects-heading">
+    <h2 id="projects-heading" class="section-title">Selected Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card placeholder">
+        <h3>Automation & Systems Projects (In Progress)</h3>
+        <p>I'm actively developing automation- and systems-focused projects that demonstrate workflow optimization, reliability, and user-facing tooling. These will be added here as they are completed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="section container" aria-labelledby="skills-heading">
+    <h2 id="skills-heading" class="section-title">Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h4>Languages</h4>
+        <p>Python · Java · JavaScript</p>
+      </div>
+      <div class="skill-group">
+        <h4>Systems & Tools</h4>
+        <p>Linux (Ubuntu) · Git · Automation & Scripting</p>
+      </div>
+      <div class="skill-group">
+        <h4>Concepts</h4>
+        <p>Problem Solving · Workflow Optimization · System Design</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact" class="section container" aria-labelledby="contact-heading">
+    <h2 id="contact-heading" class="section-title">Contact</h2>
+    <p>If you’d like to connect or learn more, feel free to reach out:</p>
+    <ul class="contact-list">
+      <li>Email: <a href="mailto:christyt1806@gmail.com">christyt1806@gmail.com</a></li>
+      <li>GitHub: <a href="https://github.com/ctytone" target="_blank" rel="noopener noreferrer">github.com/ctytone</a></li>
+      <li>Resume: <a href="files/Tytone_Resume.pdf" target="_blank" rel="noopener noreferrer">files/Tytone_Resume.pdf</a></li>
+    </ul>
+    <p class="small">© <span id="year"></span> Christopher Tytone</p>
+  </footer>
+
+  <script>
+    // Small JS: fill year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

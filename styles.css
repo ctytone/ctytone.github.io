@@ -1,0 +1,238 @@
+/* styles.css — Modern Professional theme
+   Drop this file in place of your current styles.css
+   Keeps the site structure; only visual changes.
+*/
+
+/* Tokens */
+:root{
+  --accent: #0b74de;        /* primary blue */
+  --accent-600: #095fb3;
+  --bg: rgb(97, 97, 97);          /* page background */
+  --card-bg: #000000;
+  --muted: #5b667b;
+  --text: #0f1724;
+  --surface: #f3f7fb;
+  --container-max: 1100px;
+  --pad: 20px;
+  --radius: 16px;
+  --shadow-soft: 0 10px 30px rgba(12,18,28,0.06);
+  --shadow-strong: 0 18px 40px rgba(12,18,28,0.09);
+  --avatar-size: 200px;
+  --outline-focus: rgba(11,116,222,0.18);
+  --section-accent-width: 64px;
+}
+
+/* Base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Space Mono", monospace;
+  color:var(--text);
+  background: linear-gradient(180deg, var(--bg), #ffffff 60%);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  -webkit-font-kerning:normal;
+}
+
+/* Container helper */
+.container{
+  max-width:var(--container-max);
+  margin:0 auto;
+  padding:0 20px;
+}
+
+/* -------------------------
+   Intro / Top (card + grid)
+   ------------------------- */
+.intro{
+  padding:44px 0;
+}
+.intro .container{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:26px;
+  align-items:center;
+}
+
+/* card wrapper to give a white panel look */
+.card{
+  background:var(--card-bg);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);
+  padding:22px;
+  border: 1px solid rgba(12,18,28,0.03);
+}
+
+/* Left column content */
+.name{
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  margin:0 0 6px 0;
+  letter-spacing:-0.02em;
+}
+.role{
+  margin:0 0 10px 0;
+  color:var(--muted);
+  font-weight:700;
+  font-size:0.95rem;
+}
+.mod{ font-weight:800; color:var(--text); margin-left:8px; }
+
+/* Summary text */
+.summary{
+  margin:0 0 16px 0;
+  color:var(--muted);
+  max-width:56ch;
+  font-size:1rem;
+}
+
+/* CTA Links */
+.links{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+.btn{
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:0.96rem;
+  border:5px solid transparent;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.btn.primary{
+  background:var(--accent);
+  color:#fff;
+  box-shadow: var(--shadow-strong);
+  border-color: transparent;
+}
+.btn.primary:hover{
+  transform: translateY(-3px);
+  background: var(--accent-600);
+}
+.btn:not(.primary){
+  background: transparent;
+  color: var(--text);
+  border-color: #000000;
+}
+
+/* Focus accessible outline */
+.btn:focus{ outline: 3px solid var(--outline-focus); outline-offset: 3px; }
+
+/* -------------------------
+   Avatar — framed, full-bleed crop
+   ------------------------- */
+.intro-right{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px;
+}
+
+/* The avatar container is a rounded square.
+   The <img> inside covers the entire area via object-fit:cover.
+*/
+.avatar{
+  width:var(--avatar-size);
+  height:var(--avatar-size);
+  border-radius:14px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  box-shadow: var(--shadow-soft);
+  background: linear-gradient(180deg,#fff,#f3f7fb);
+  border: 1px solid rgba(12,18,28,0.03);
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;    /* ensures the image fills/crops to the frame */
+  display:block;
+}
+
+/* -------------------------
+   Sections
+   ------------------------- */
+.section{ padding:28px 0; border-top:1px solid rgba(12,18,28,0.04); }
+.section-title{
+  margin:0 0 12px 0;
+  font-size:1.05rem;
+  color:var(--text);
+  position:relative;
+  display:inline-block;
+}
+.section-title::after{
+  content:"";
+  display:block;
+  width:var(--section-accent-width);
+  height:4px;
+  background: linear-gradient(90deg, var(--accent), rgba(11,116,222,0.55));
+  border-radius:4px;
+  margin-top:10px;
+}
+
+/* About card styling */
+.about-text p{ margin:0 0 12px 0; color:var(--muted); line-height:1.6; font-size:0.98rem; }
+
+/* Projects */
+.projects-grid{ display:grid; gap:16px; grid-template-columns: 1fr; }
+.project-card{ padding:18px; border-radius:12px; background: linear-gradient(180deg,#fff,#fbfdff); box-shadow: var(--shadow-soft); border: 1px solid rgba(12,18,28,0.03); }
+
+/* Skills */
+.skills-grid{ display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.skill-group h4{ margin:0 0 6px 0; font-size:0.95rem; }
+.skill-group p{ margin:0; color:var(--muted); }
+
+/* Contact */
+.contact-list{ list-style:none; padding:0; margin:6px 0 12px 0; color:var(--muted); }
+.contact-list li{ margin:6px 0; }
+
+/* Footer small text */
+.small{ color:var(--muted); font-size:0.9rem; margin-top:16px; }
+
+/* Responsive layout: two-column intro on larger screens */
+@media(min-width:900px){
+    .intro .container{ grid-template-columns: 1fr 360px; gap:34px; }
+    .summary{ max-width:48ch; }
+}
+
+.btn:not(.primary){
+    background:transparent;
+    color:var(--text);
+    border-color: rgba(11,116,222,0.08);
+    box-shadow: var(--shadow-soft);
+}
+.btn:not(.primary):hover{
+    transform: translateY(-3px);
+    background: var(--accent);
+    color: #fff;
+    box-shadow: var(--shadow-strong);
+}
+
+/* Accessibility / reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .btn{ transition:none; transform:none; }
+}
+
+/* Force non-primary buttons to have a neutral black-ish border and neutral background */
+.links .btn:not(.primary),
+.btn:not(.primary) {
+  border-color: rgba(0,0,0,0.45) !important;
+  background: transparent !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+
+/* On hover keep it subtle but darker border */
+.links .btn:not(.primary):hover,
+.btn:not(.primary):hover {
+  border-color: rgba(0,0,0,0.7) !important;
+  transform: translateY(-2px) !important;
+}
+
