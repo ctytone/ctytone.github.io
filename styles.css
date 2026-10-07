@@ -20,13 +20,12 @@ body{
   background:var(--bg);   /* solid colour: no gradient banding on long pages */
   color:var(--text);
   font-family:var(--sans);
-  font-size:1rem;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
 a{ color:var(--accent); }
 a:hover{ color:var(--accent-600); }
-:focus-visible{ outline:3px solid rgba(11,116,222,.35); outline-offset:3px; }
+:focus-visible{ outline:3px solid color-mix(in srgb, var(--accent) 35%, transparent); outline-offset:3px; }
 
 .container{
   max-width:var(--container-max);
@@ -52,7 +51,7 @@ a:hover{ color:var(--accent-600); }
 }
 .btn:hover{ transform:translateY(-2px); background:var(--text); color:#fff; }
 .btn-primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
-.btn-primary:hover{ background:var(--accent-600); border-color:var(--accent-600); color:#fff; }
+.btn-primary:hover{ background:var(--accent-600); border-color:var(--accent-600); }
 .btn-small{ padding:7px 14px; font-size:.85rem; }
 
 /* Hero */
