@@ -7,7 +7,7 @@ A single page in plain HTML, CSS and a little JavaScript. No framework and no bu
 ## Sections
 
 1. **Hero**: name, one-line identity, and LinkedIn, Resume and GitHub buttons
-2. **Projects**: curated project cards (currently Setlist and Google Tasks Importer)
+2. **Projects**: curated project cards (currently Google Tasks Importer)
 3. **About**
 4. **Contact**: email, LinkedIn and GitHub
 
@@ -20,7 +20,7 @@ A single page in plain HTML, CSS and a little JavaScript. No framework and no bu
 
 ## Adding a project
 
-Copy an `<article class="project">` block in `index.html` and edit it. The grid fits a third card automatically.
+Copy an `<article class="project">` block in `index.html` and edit it. Cards sit two to a row on wide screens and stack on phones.
 
 - **Screenshot or GIF:** replace the placeholder `<div class="project-media placeholder">` with `<img class="project-media" src="images/your-shot.png" alt="...">` (16:10 works best).
 - **Live button:** add `<a class="btn btn-small btn-primary" href="...">Live</a>` before the Code button only when the project has a live link. Leave it out otherwise.

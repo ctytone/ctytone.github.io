@@ -218,8 +218,8 @@ a{ color:inherit; }
 .projects-grid{
   display:grid;
   gap:40px 36px;
-  /* 2 cards fill the row; a 3rd fits alongside on wide screens */
-  grid-template-columns:repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  /* Two columns on wide screens; a single card keeps its column width instead of stretching */
+  grid-template-columns:repeat(auto-fill, minmax(min(100%, 420px), 1fr));
 }
 .project{
   position:relative;
