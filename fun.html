@@ -7,7 +7,7 @@
   <meta name="description" content="The non-work stuff: games, hobbies, and whatever else.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -45,6 +45,26 @@
         </div>
       </div>
     </section>
+
+    <section id="music" class="section" aria-labelledby="music-heading">
+      <div class="container">
+        <h2 id="music-heading" class="section-title">On Repeat</h2>
+        <!-- Filled in live from Last.fm by the script at the bottom of this page -->
+        <article class="np-card" id="np-card">
+          <div class="np-art-wrap">
+            <img class="np-art" id="np-art" alt="" width="300" height="300" hidden>
+            <div class="np-art placeholder" id="np-art-placeholder" aria-hidden="true">♫</div>
+          </div>
+          <div class="np-body">
+            <p class="label" id="np-status">Loading…</p>
+            <p class="np-track" id="np-track">—</p>
+            <p class="np-artist" id="np-artist"></p>
+            <ol class="np-recent" id="np-recent" aria-label="Recently played"></ol>
+            <a class="btn btn-small" id="np-profile" href="https://www.last.fm/" target="_blank" rel="noopener noreferrer">Last.fm profile</a>
+          </div>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer id="contact" class="section">
@@ -74,6 +94,63 @@
       .catch(() => {
         document.querySelector('[data-rl="rank"]').textContent = 'Rank unavailable';
       });
+
+    // Last.fm now playing. The API key is a read-only public key (fine to
+    // ship in the page); never put the Last.fm "shared secret" here.
+    const LASTFM_USER = 'ctytone';
+    const LASTFM_KEY = '8ba0504ce48da1bf2ca8a270a9230cf9';
+
+    const $ = id => document.getElementById(id);
+    $('np-profile').href = `https://www.last.fm/user/${encodeURIComponent(LASTFM_USER)}`;
+
+    function timeAgo(unix) {
+      const s = Math.floor(Date.now() / 1000) - unix;
+      if (s < 3600) return `${Math.max(1, Math.floor(s / 60))} min ago`;
+      if (s < 86400) return `${Math.floor(s / 3600)} hr ago`;
+      return `${Math.floor(s / 86400)} days ago`;
+    }
+
+    function loadNowPlaying() {
+      const url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=5'
+        + `&user=${encodeURIComponent(LASTFM_USER)}&api_key=${encodeURIComponent(LASTFM_KEY)}`;
+      fetch(url)
+        .then(r => r.json())
+        .then(d => {
+          const tracks = d?.recenttracks?.track;
+          if (!tracks || !tracks.length) throw new Error(d?.message || 'No tracks');
+          const [first, ...rest] = tracks;
+          const live = first['@attr']?.nowplaying === 'true';
+
+          $('np-status').textContent = live
+            ? 'Now playing'
+            : `Last played · ${first.date ? timeAgo(Number(first.date.uts)) : ''}`;
+          $('np-card').classList.toggle('is-live', live);
+          $('np-track').textContent = first.name;
+          $('np-artist').textContent = first.artist['#text'];
+
+          // Last.fm returns an empty string or a grey star placeholder when there's no art
+          const art = first.image?.find(i => i.size === 'extralarge')?.['#text'];
+          const hasArt = art && !art.includes('2a96cbd8b46e442fc41c2b86b821562f');
+          $('np-art').hidden = !hasArt;
+          $('np-art-placeholder').hidden = hasArt;
+          if (hasArt) {
+            $('np-art').src = art;
+            $('np-art').alt = `Album art for ${first.album?.['#text'] || first.name}`;
+          }
+
+          $('np-recent').replaceChildren(...rest.slice(0, 4).map(t => {
+            const li = document.createElement('li');
+            li.textContent = `${t.name} — ${t.artist['#text']}`;
+            return li;
+          }));
+        })
+        .catch(() => {
+          $('np-status').textContent = 'Offline';
+          $('np-track').textContent = 'Music unavailable';
+        });
+    }
+    loadNowPlaying();
+    setInterval(loadNowPlaying, 60000);
   </script>
 </body>
 </html>
