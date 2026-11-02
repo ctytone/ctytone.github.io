@@ -124,9 +124,9 @@ a{ color:inherit; }
   padding:12px 16px;
   background:var(--paper-light) var(--speck-dark);
   color:var(--ink);
-  font-size:clamp(1.08rem, 2.4vw, 1.3rem);
-  font-weight:600;
-  line-height:1.4;
+  font-family:var(--type);
+  font-size:clamp(1.1rem, 2.5vw, 1.35rem);
+  line-height:1.45;
   transform:rotate(-.8deg);
   clip-path:polygon(0 3%, 6% 0, 40% 2%, 70% 0, 100% 3%, 99% 50%, 100% 97%, 64% 100%, 30% 97%, 0 100%, 1% 52%);
 }
