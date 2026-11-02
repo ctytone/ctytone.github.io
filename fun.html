@@ -23,11 +23,11 @@
   </header>
 
   <main>
-    <section id="fun" class="section" aria-labelledby="fun-heading">
-      <div class="container">
-        <h2 id="fun-heading" class="section-title">Rocket League</h2>
-        <div class="fun-grid">
+    <section id="fun" class="section" aria-label="Fun stuff">
+      <div class="container fun-grid">
 
+        <div class="fun-block" aria-labelledby="fun-heading">
+          <h2 id="fun-heading" class="section-title">Rocket League</h2>
           <!--
             Filled in from data/rocket-league.json, which the
             "Update Rocket League rank" GitHub Action refreshes every 6 hours.
@@ -41,28 +41,62 @@
             <p class="rank-meta">Epic: CyGy Ω · as of <time data-rl="updated">—</time></p>
             <a class="btn btn-small" href="https://rocketleague.tracker.network/rocket-league/profile/epic/CyGy%20%CE%A9/mmr?playlist=11" target="_blank" rel="noopener noreferrer">Live stats on Tracker</a>
           </article>
-
         </div>
+
+        <div class="fun-block fun-block-music" aria-labelledby="music-heading">
+          <h2 id="music-heading" class="section-title">On Repeat</h2>
+          <!-- Filled in live from Last.fm by the script at the bottom of this page -->
+          <article class="np-card" id="np-card">
+            <a class="np-art-wrap" id="np-link" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer">
+              <img class="np-art" id="np-art" alt="" width="300" height="300" hidden>
+              <div class="np-art placeholder" id="np-art-placeholder" aria-hidden="true">♫</div>
+              <span class="np-play" aria-hidden="true">Play on Spotify</span>
+            </a>
+            <div class="np-body">
+              <p class="label" id="np-status">Loading…</p>
+              <p class="np-track" id="np-track">—</p>
+              <p class="np-artist" id="np-artist"></p>
+              <ol class="np-recent" id="np-recent" aria-label="Recently played"></ol>
+              <a class="btn btn-small" id="np-profile" href="https://www.last.fm/" target="_blank" rel="noopener noreferrer">Last.fm profile</a>
+            </div>
+          </article>
+        </div>
+
       </div>
     </section>
 
-    <section id="music" class="section" aria-labelledby="music-heading">
+    <section id="charts" class="section" aria-labelledby="charts-heading">
       <div class="container">
-        <h2 id="music-heading" class="section-title">On Repeat</h2>
-        <!-- Filled in live from Last.fm by the script at the bottom of this page -->
-        <article class="np-card" id="np-card">
-          <div class="np-art-wrap">
-            <img class="np-art" id="np-art" alt="" width="300" height="300" hidden>
-            <div class="np-art placeholder" id="np-art-placeholder" aria-hidden="true">♫</div>
+        <div class="charts-head">
+          <h2 id="charts-heading" class="section-title">Most Played</h2>
+          <label class="period-picker">
+            <span>Show</span>
+            <select id="period">
+              <option value="7day">Last 7 days</option>
+              <option value="1month" selected>Last month</option>
+              <option value="3month">Last 3 months</option>
+              <option value="6month">Last 6 months</option>
+              <option value="12month">Last year</option>
+              <option value="overall">All time</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Filled in from Last.fm top artists / albums / tracks for the chosen period -->
+        <div class="charts-grid" aria-live="polite">
+          <div class="chart">
+            <h3>Artists</h3>
+            <ol class="chart-list" id="chart-artists"></ol>
           </div>
-          <div class="np-body">
-            <p class="label" id="np-status">Loading…</p>
-            <p class="np-track" id="np-track">—</p>
-            <p class="np-artist" id="np-artist"></p>
-            <ol class="np-recent" id="np-recent" aria-label="Recently played"></ol>
-            <a class="btn btn-small" id="np-profile" href="https://www.last.fm/" target="_blank" rel="noopener noreferrer">Last.fm profile</a>
+          <div class="chart">
+            <h3>Albums</h3>
+            <ol class="chart-list" id="chart-albums"></ol>
           </div>
-        </article>
+          <div class="chart">
+            <h3>Tracks</h3>
+            <ol class="chart-list" id="chart-tracks"></ol>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -133,10 +167,13 @@
           const hasArt = art && !art.includes('2a96cbd8b46e442fc41c2b86b821562f');
           $('np-art').hidden = !hasArt;
           $('np-art-placeholder').hidden = hasArt;
-          if (hasArt) {
-            $('np-art').src = art;
-            $('np-art').alt = `Album art for ${first.album?.['#text'] || first.name}`;
-          }
+          if (hasArt) $('np-art').src = art;
+
+          // No Spotify API without a server, so link to a Spotify search for
+          // "track artist"; the song is almost always the top result.
+          const artist = first.artist['#text'];
+          $('np-link').href = `https://open.spotify.com/search/${encodeURIComponent(`${first.name} ${artist}`)}`;
+          $('np-link').setAttribute('aria-label', `Play ${first.name} by ${artist} on Spotify`);
 
           $('np-recent').replaceChildren(...rest.slice(0, 4).map(t => {
             const li = document.createElement('li');
@@ -151,6 +188,105 @@
     }
     loadNowPlaying();
     setInterval(loadNowPlaying, 60000);
+
+    // Most played: top artists, albums and tracks for the chosen period
+    const CHART_LIMIT = 5;
+    const NO_ART = '2a96cbd8b46e442fc41c2b86b821562f'; // Last.fm's blank star image
+    const chartCache = {};
+
+    function lastfm(method, period) {
+      const url = `https://ws.audioscrobbler.com/2.0/?method=user.${method}&format=json`
+        + `&user=${encodeURIComponent(LASTFM_USER)}&api_key=${encodeURIComponent(LASTFM_KEY)}`
+        + `&period=${period}&limit=${CHART_LIMIT}`;
+      return fetch(url).then(r => r.json()).then(d => {
+        if (d.error) throw new Error(d.message);
+        return d;
+      });
+    }
+
+    function chartItem({ title, sub, plays, art }) {
+      const li = document.createElement('li');
+      // Albums always get an art slot (blank square if Last.fm has none) so rows line up
+      if (art !== undefined) {
+        const img = document.createElement(art ? 'img' : 'div');
+        img.className = art ? 'chart-art' : 'chart-art placeholder';
+        if (art) {
+          img.src = art;
+          img.alt = '';
+          img.width = 48; img.height = 48;
+          img.loading = 'lazy';
+        }
+        li.append(img);
+      }
+      const text = document.createElement('div');
+      text.className = 'chart-text';
+      const t = document.createElement('span');
+      t.className = 'chart-title';
+      t.textContent = title;
+      text.append(t);
+      if (sub) {
+        const s = document.createElement('span');
+        s.className = 'chart-sub';
+        s.textContent = sub;
+        text.append(s);
+      }
+      const p = document.createElement('span');
+      p.className = 'chart-plays';
+      p.textContent = `${Number(plays).toLocaleString()} ${plays == 1 ? 'play' : 'plays'}`;
+      li.append(text, p);
+      return li;
+    }
+
+    function fillChart(id, items) {
+      const list = $(id);
+      if (!items.length) {
+        const li = document.createElement('li');
+        li.className = 'chart-empty';
+        li.textContent = 'Nothing played in this period.';
+        list.replaceChildren(li);
+        return;
+      }
+      list.replaceChildren(...items.map(chartItem));
+    }
+
+    function setChartStatus(text) {
+      for (const id of ['chart-artists', 'chart-albums', 'chart-tracks']) {
+        const li = document.createElement('li');
+        li.className = 'chart-empty';
+        li.textContent = text;
+        $(id).replaceChildren(li);
+      }
+    }
+
+    function loadCharts(period) {
+      if (!chartCache[period]) {
+        setChartStatus('Loading…');
+        chartCache[period] = Promise.all([
+          lastfm('gettopartists', period),
+          lastfm('gettopalbums', period),
+          lastfm('gettoptracks', period),
+        ]).catch(err => { delete chartCache[period]; throw err; });
+      }
+      chartCache[period]
+        .then(([a, al, t]) => {
+          if ($('period').value !== period) return; // user picked another period meanwhile
+          fillChart('chart-artists', (a.topartists?.artist ?? []).map(x => ({
+            title: x.name, plays: x.playcount,
+          })));
+          fillChart('chart-albums', (al.topalbums?.album ?? []).map(x => {
+            const art = x.image?.find(i => i.size === 'large')?.['#text'];
+            return { title: x.name, sub: x.artist?.name, plays: x.playcount,
+                     art: art && !art.includes(NO_ART) ? art : '' };
+          }));
+          fillChart('chart-tracks', (t.toptracks?.track ?? []).map(x => ({
+            title: x.name, sub: x.artist?.name, plays: x.playcount,
+          })));
+        })
+        .catch(() => setChartStatus('Couldn’t load from Last.fm. Try again in a minute.'));
+    }
+
+    $('period').addEventListener('change', e => loadCharts(e.target.value));
+    loadCharts($('period').value);
   </script>
 </body>
 </html>

@@ -356,11 +356,16 @@ a{ color:inherit; }
 .site-nav{ margin-bottom:36px; }
 .hero .btn[aria-current="page"]{ color:var(--paper-light); }
 #fun{ background:var(--speck-dark), var(--paper); }
+/* Rocket League and music side by side on wide screens, stacked on phones */
 .fun-grid{
   display:grid;
-  gap:40px 36px;
-  grid-template-columns:repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap:56px 40px;
+  grid-template-columns:1fr;
+  align-items:stretch;
 }
+.fun-block{ display:flex; flex-direction:column; align-items:flex-start; }
+.fun-block > article{ flex:1; align-self:stretch; }
+.fun-block-music .section-title{ background:var(--red); color:var(--paper-light); transform:rotate(1.2deg); }
 .rank-card{
   position:relative;
   padding:26px 24px 24px;
@@ -408,21 +413,25 @@ a{ color:inherit; }
 .rank-meta{ margin-bottom:18px !important; color:var(--muted); font-size:.9rem; }
 
 /* Now playing (Last.fm) */
-#music{
-  background:var(--speck-light), var(--ink);
-  color:var(--paper);
-}
-#music .section-title{ background:var(--red); color:var(--paper-light); transform:rotate(1.2deg); }
 .np-card{
   display:flex;
   flex-wrap:wrap;
   gap:28px;
   align-items:flex-start;
-  max-width:760px;
+  padding:30px 24px 24px;
+  background:var(--speck-light), var(--ink);
+  color:var(--paper);
+  border:2px solid var(--ink);
+  box-shadow:7px 7px 0 var(--red);
+  transform:rotate(.5deg);
 }
 .np-art-wrap{
   position:relative;
+  display:block;
   flex-shrink:0;
+  color:var(--ink);
+  text-decoration:none;
+  transition:transform .12s ease, box-shadow .12s ease;
   padding:10px 10px 30px;
   background:var(--paper-light) var(--speck-dark);
   transform:rotate(-2deg);
@@ -454,7 +463,17 @@ a{ color:inherit; }
   font-size:4rem;
 }
 .np-art[hidden]{ display:none; }
-.np-body{ flex:1; min-width:240px; }
+/* Handwritten-style caption in the photo's bottom strip says it's clickable */
+.np-play{
+  position:absolute;
+  left:0; right:0; bottom:6px;
+  font-family:var(--type);
+  font-size:.8rem;
+  text-align:center;
+}
+.np-art-wrap:hover{ transform:rotate(-2deg) translate(-3px,-3px); box-shadow:11px 11px 0 var(--red); }
+.np-art-wrap:hover .np-play{ text-decoration:underline; }
+.np-body{ flex:1; min-width:200px; }
 .np-body p{ margin:0; }
 .np-body .label{
   display:table;
@@ -495,7 +514,115 @@ a{ color:inherit; }
 }
 .np-recent li{ margin-bottom:4px; }
 .np-recent:empty{ display:none; }
-#music .btn{ color:var(--paper); }
+.np-card .btn{ color:var(--paper); }
+
+/* Most played (Last.fm top charts) */
+#charts{
+  background:var(--speck-light), var(--ink);
+  color:var(--paper);
+}
+#charts .container{ z-index:1; }
+#charts .section-title{ background:var(--paper); color:var(--ink); margin-bottom:0; }
+.charts-head{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px 32px;
+  margin-bottom:40px;
+}
+.period-picker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-family:var(--type);
+}
+.period-picker select{
+  appearance:none;
+  -webkit-appearance:none;
+  padding:8px 40px 7px 14px;
+  border:2px solid var(--paper);
+  border-radius:0;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--paper) 50%) calc(100% - 20px) 50% / 6px 6px no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--paper) 50%) calc(100% - 14px) 50% / 6px 6px no-repeat,
+    var(--ink);
+  color:var(--paper);
+  font-family:var(--display);
+  font-size:1.05rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:4px 4px 0 var(--red);
+}
+.period-picker select:hover{ border-color:var(--paper-light); }
+.period-picker option{ background:var(--ink); color:var(--paper); }
+
+.charts-grid{
+  display:grid;
+  gap:44px 36px;
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.chart h3{
+  margin:0 0 14px;
+  padding-bottom:8px;
+  border-bottom:3px solid var(--red);
+  font-family:var(--display);
+  font-weight:400;
+  font-size:1.9rem;
+  line-height:1.05;
+  text-transform:uppercase;
+}
+.chart-list{
+  margin:0;
+  padding:0;
+  list-style:none;
+  counter-reset:rank;
+}
+.chart-list li{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px dashed rgba(235,227,209,.3);
+  counter-increment:rank;
+}
+/* Rank number: these really are ranked, so the numbers carry meaning */
+.chart-list li:not(.chart-empty)::before{
+  content:counter(rank);
+  flex:0 0 1.3em;
+  font-family:var(--display);
+  font-size:1.7rem;
+  line-height:1;
+  color:var(--red);
+  text-align:right;
+}
+.chart-list li:first-child:not(.chart-empty)::before{ font-size:2.3rem; }
+.chart-art{
+  flex-shrink:0;
+  width:48px; height:48px;
+  object-fit:cover;
+  border:2px solid var(--paper);
+  filter:grayscale(1) contrast(1.2);
+}
+.chart-art.placeholder{
+  background:radial-gradient(circle, rgba(235,227,209,.3) 32%, transparent 34%) 0 0 / 6px 6px;
+}
+.chart-text{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+.chart-title{ overflow-wrap:anywhere; line-height:1.3; }
+.chart-sub{ font-size:.85rem; opacity:.7; }
+.chart-plays{
+  flex-shrink:0;
+  font-size:.82rem;
+  opacity:.75;
+  white-space:nowrap;
+}
+.chart-empty{ opacity:.7; font-size:.92rem; }
 
 /* Wider screens */
 @media (min-width:720px){
@@ -504,9 +631,14 @@ a{ color:inherit; }
   .avatar{ width:240px; height:240px; }
   .section{ padding:96px 0 88px; }
 }
+@media (min-width:900px){
+  .fun-grid{ grid-template-columns:1fr 1.4fr; }
+}
 
 @media (prefers-reduced-motion:reduce){
   .btn{ transition:none; }
   .btn:hover{ transform:none; }
   .np-card.is-live .label::before{ animation:none; }
+  .np-art-wrap{ transition:none; }
+  .np-art-wrap:hover{ transform:rotate(-2deg); }
 }
