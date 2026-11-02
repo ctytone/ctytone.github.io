@@ -1,0 +1,41 @@
+name: Update Rocket League rank
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours (UTC)
+  workflow_dispatch: {}   # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-rl-rank
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch rank
+        run: node scripts/update-rl-rank.mjs
+        env:
+          TRN_API_KEY: ${{ secrets.TRN_API_KEY }}
+
+      - name: Commit if rank changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/rocket-league.json
+          # The script only rewrites the file when rank/division/MMR change
+          if git diff --cached --quiet; then
+            echo "No rank change."
+          else
+            git commit -m "Update Rocket League rank"
+            git push
+          fi

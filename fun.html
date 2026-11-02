@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fun · Christopher Tytone</title>
+  <meta name="description" content="The non-work stuff: games, hobbies, and whatever else.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero hero-compact">
+    <div class="container">
+      <nav class="links site-nav" aria-label="Site">
+        <a class="btn" href="index.html">Home</a>
+        <a class="btn btn-primary" href="fun.html" aria-current="page">Fun</a>
+      </nav>
+      <h1 class="name">Fun Stuff</h1>
+      <p class="subline">Off the clock · games, hobbies, etc.</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="fun" class="section" aria-labelledby="fun-heading">
+      <div class="container">
+        <h2 id="fun-heading" class="section-title">Rocket League</h2>
+        <div class="fun-grid">
+
+          <!--
+            Filled in from data/rocket-league.json, which the
+            "Update Rocket League rank" GitHub Action refreshes every 6 hours.
+            If the file can't be loaded, the card shows "Rank unavailable".
+          -->
+          <article class="rank-card" id="rl-card">
+            <p class="label" data-rl="playlist">Ranked Doubles · 2v2</p>
+            <p class="rank-name" data-rl="rank">Rank loading…</p>
+            <p class="rank-division" data-rl="division"></p>
+            <p class="rank-mmr"><span data-rl="mmr">—</span> MMR</p>
+            <p class="rank-meta">Epic: CyGy Ω · as of <time data-rl="updated">—</time></p>
+            <a class="btn btn-small" href="https://rocketleague.tracker.network/rocket-league/profile/epic/CyGy%20%CE%A9/mmr?playlist=11" target="_blank" rel="noopener noreferrer">Live stats on Tracker</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="section">
+    <div class="container">
+      <p class="small">© <span id="year"></span> Christopher Tytone</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Rocket League rank, written by the GitHub Action
+    fetch('data/rocket-league.json', { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(d => {
+        const set = (k, v) => { const el = document.querySelector(`[data-rl="${k}"]`); if (el && v != null) el.textContent = v; };
+        set('playlist', d.playlist);
+        set('rank', d.rank);
+        set('division', d.division);
+        set('mmr', d.mmr != null ? Number(d.mmr).toLocaleString() : null);
+        if (d.updated) {
+          const t = document.querySelector('[data-rl="updated"]');
+          t.dateTime = d.updated;
+          t.textContent = new Date(d.updated).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+      })
+      .catch(() => {
+        document.querySelector('[data-rl="rank"]').textContent = 'Rank unavailable';
+      });
+  </script>
+</body>
+</html>
