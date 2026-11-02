@@ -8,7 +8,8 @@ const USER = "CyGy Ω";
 const PLAYLIST_ID = 11; // Ranked Doubles 2v2
 const OUT = "data/rocket-league.json";
 
-const key = process.env.TRN_API_KEY;
+// Trim in case the secret was pasted with a trailing newline or spaces
+const key = process.env.TRN_API_KEY?.trim();
 if (!key) {
   console.error("TRN_API_KEY is not set.");
   process.exit(1);
