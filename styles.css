@@ -248,6 +248,7 @@ a{ color:inherit; }
 .project-media{
   display:block;
   width:100%;
+  height:auto;
   aspect-ratio:16 / 10;
   object-fit:cover;
   border-bottom:2px solid var(--ink);
