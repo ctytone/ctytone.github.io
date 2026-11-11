@@ -249,6 +249,8 @@ a{ color:inherit; }
   display:block;
   width:100%;
   height:auto;
+  min-height:0;
+  flex:none;
   aspect-ratio:16 / 10;
   object-fit:cover;
   border-bottom:2px solid var(--ink);
